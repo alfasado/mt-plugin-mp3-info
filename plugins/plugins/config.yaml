@@ -1,0 +1,62 @@
+name: MP3Info
+id  : MP3Info
+key:  mp3info
+description: <__trans phrase="Print information of MP3.">
+version: 0.1
+author_link: http://alfasado.net/
+author_name: Alfasado Inc.
+l10n_class: MP3Info::L10N
+tags:
+    function:
+        MP3Info: >
+                sub {
+                    use MP3::Info;
+                    my ( $ctx, $args ) = @_;
+                    my $target = $args->{ target } || 'TIME';
+                    $target = uc( $target );
+                    my $asset = $ctx->stash( 'asset' )
+                        or return $ctx->_no_asset_error();
+                    if ( $asset->file_ext ne 'mp3' ) {
+                        return '';
+                    }
+                    if ( my $info = get_mp3info( $asset->file_path ) ) {
+                        if ( $target eq 'DUMP' ) {
+                            use Data::Dumper;
+                            return Dumper $info;
+                        }
+                        if ( $target eq 'HMS' ) {
+                            my $hh = $info->{ HH } || '';
+                            my $mm = $info->{ MM } || '';
+                            my $ss = $info->{ SS } || '';
+                            my $sprintf = $args->{ format } || '%02d:%02d:%02d';
+                            return sprintf( $sprintf, $hh, $mm, $ss );
+                        } elsif ( $target eq 'MS' ) {
+                            my $secs = int( $info->{ SECS } );
+                            my $m = int( $secs / 60 );
+                            my $s = int( $secs % 60 );
+                            my $sprintf = $args->{ format } || '%02d:%02d';
+                            return sprintf( $sprintf, $m, $s );
+                        }
+                        my $value = $info->{ $target };
+                        return $value;
+                    }
+                }
+        MP3Tag: >
+                sub {
+                    use MP3::Info;
+                    my ( $ctx, $args ) = @_;
+                    my $target = $args->{ target } || 'TITLE';
+                    $target = uc( $target );
+                    my $asset = $ctx->stash( 'asset' )
+                        or return $ctx->_no_asset_error();
+                    if ( $asset->file_ext ne 'mp3' ) {
+                        return '';
+                    }
+                    if ( my $info = get_mp3tag( $asset->file_path ) ) {
+                        if ( $target eq 'DUMP' ) {
+                            use Data::Dumper;
+                            return Dumper $info;
+                        }
+                        return $info->{ $target };
+                    }
+                }
