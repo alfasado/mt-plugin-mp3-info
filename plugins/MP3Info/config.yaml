@@ -36,6 +36,16 @@ tags:
                             my $s = int( $secs % 60 );
                             my $sprintf = $args->{ format } || '%02d:%02d';
                             return sprintf( $sprintf, $m, $s );
+                        } elsif ( $target eq 'M' ) {
+                            my $secs = int( $info->{ SECS } );
+                            my $m = int( $secs / 60 );
+                            $m++ if int( $secs % 60 ) >= 30;
+                            my $sprintf = $args->{ format } || '%d';
+                            return sprintf( $sprintf, $m );
+                        } elsif ( $target eq 'S' ) {
+                            my $secs = int( $info->{ SECS } );
+                            my $sprintf = $args->{ format } || '%d';
+                            return sprintf( $sprintf, $secs );
                         }
                         my $value = $info->{ $target };
                         return $value;
