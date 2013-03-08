@@ -25,8 +25,8 @@ tags:
                             return Dumper $info;
                         }
                         if ( $target eq 'HMS' ) {
-                            my $hh = $info->{ HH } || '';
-                            my $mm = $info->{ MM } || '';
+                            my $hh = int( $info->{ SECS } / 3600 );
+                            my $mm = int( $info->{ MM } % 60 );
                             my $ss = $info->{ SS } || '';
                             my $sprintf = $args->{ format } || '%02d:%02d:%02d';
                             return sprintf( $sprintf, $hh, $mm, $ss );
