@@ -2,7 +2,7 @@ name: MP3Info
 id  : MP3Info
 key:  mp3info
 description: <__trans phrase="Print information of MP3.">
-version: 0.1
+version: 0.2
 author_link: http://alfasado.net/
 author_name: Alfasado Inc.
 l10n_class: MP3Info::L10N
@@ -36,8 +36,19 @@ tags:
                             my $s = int( $secs % 60 );
                             my $sprintf = $args->{ format } || '%02d:%02d';
                             return sprintf( $sprintf, $m, $s );
+                        } elsif ( $target eq 'M' ) {
+                            my $secs = int( $info->{ SECS } );
+                            my $m = int( $secs / 60 );
+                            if ( $args->{ round } ) {
+                                $m++ if int( $secs % 60 ) >= 30;
+                            }
+                            my $sprintf = $args->{ format } || '%d';
+                            return sprintf( $sprintf, $m );
                         }
                         my $value = $info->{ $target };
+                        if ( my $sprintf = $args->{ format } ) {
+                            return sprintf( $sprintf, $value );
+                        }
                         return $value;
                     }
                 }
