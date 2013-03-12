@@ -2,7 +2,7 @@ name: MP3Info
 id  : MP3Info
 key:  mp3info
 description: <__trans phrase="Print information of MP3.">
-version: 0.3
+version: 0.4
 author_link: http://alfasado.net/
 author_name: Alfasado Inc.
 l10n_class: MP3Info::L10N
@@ -12,7 +12,7 @@ tags:
                 sub {
                     use MP3::Info;
                     my ( $ctx, $args ) = @_;
-                    my $target = $args->{ target } || 'TIME';
+                    my $target = $args->{ target } || 'SECS';
                     $target = uc( $target );
                     my $asset = $ctx->stash( 'asset' )
                         or return $ctx->_no_asset_error();
