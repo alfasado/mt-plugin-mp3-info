@@ -2,7 +2,7 @@ name: MP3Info
 id  : MP3Info
 key:  mp3info
 description: <__trans phrase="Print information of MP3.">
-version: 0.2
+version: 0.3
 author_link: http://alfasado.net/
 author_name: Alfasado Inc.
 l10n_class: MP3Info::L10N
@@ -25,8 +25,12 @@ tags:
                             return Dumper $info;
                         }
                         if ( $target eq 'HMS' ) {
-                            my $hh = $info->{ HH } || '';
+                            my $hh = 0;
                             my $mm = $info->{ MM } || '';
+                            if ( $mm > 59 ) {
+                                $hh = int( $mm / 60 );
+                                $mm = int( $mm % 60 );
+                            }
                             my $ss = $info->{ SS } || '';
                             my $sprintf = $args->{ format } || '%02d:%02d:%02d';
                             return sprintf( $sprintf, $hh, $mm, $ss );
